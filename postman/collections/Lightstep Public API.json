@@ -1,0 +1,209 @@
+{
+	"info": {
+		"_postman_id": "7264f30d-9b3d-462e-984f-e0c00a538797",
+		"name": "Lightstep Public API",
+		"description": "Lightstep Public API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "21442950-7264f30d-9b3d-462e-984f-e0c00a538797"
+	},
+	"item": [
+		{
+			"name": "Streams",
+			"item": [
+				{
+					"name": "Timeseries",
+					"id": "261d5cc4-e83a-4494-a2c7-c5668a71be85",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{lightstep_api_key}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "https://api.lightstep.com/public/v0.2/:organization/projects/:project/streams/:stream-id/timeseries?oldest-time={{oldest-time}}&youngest-time={{youngest-time}}&resolution-ms={{resolution-ms}}&include-exemplars={{include-exemplars}}&include-ops-counts={{include-ops-counts}}&include-error-counts={{include-error-counts}}&percentile={{percentile}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"lightstep",
+								"com"
+							],
+							"path": [
+								"public",
+								"v0.2",
+								":organization",
+								"projects",
+								":project",
+								"streams",
+								":stream-id",
+								"timeseries"
+							],
+							"query": [
+								{
+									"description": "Beginning of the time range being queried, e.g., 2018-01-20T02:30:00-08:00",
+									"key": "oldest-time",
+									"value": "{{oldest-time}}"
+								},
+								{
+									"description": "End of the time range being queried, e.g., 2018-01-22T06:30:00-08:00",
+									"key": "youngest-time",
+									"value": "{{youngest-time}}"
+								},
+								{
+									"description": "Length of time represented by each \"point\" (time window) in the timeseries, in milliseconds. The minimum value (highest resolution data) for this parameter is 60000 (representing 1 minute of data per point). Larger values will result in latency distributions being merged.",
+									"key": "resolution-ms",
+									"value": "{{resolution-ms}}"
+								},
+								{
+									"description": "Boolean value that indicates whether the response should include example trace information for each time window. 0=false, 1=true",
+									"key": "include-exemplars",
+									"value": "{{include-exemplars}}"
+								},
+								{
+									"description": "Indicates whether the response should specify the number of spans represented by each time window. 0=false, 1=true",
+									"key": "include-ops-counts",
+									"value": "{{include-ops-counts}}"
+								},
+								{
+									"description": "Indicates whether the response should specify the number of spans with errors in each time window. 0=false, 1=true",
+									"key": "include-error-counts",
+									"value": "{{include-error-counts}}"
+								},
+								{
+									"description": "A (possibly) repeated field that indicates what latency percentiles to return for each time window, if any. Valid for values [0, 99.99].",
+									"key": "percentile",
+									"value": "{{percentile}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "organization",
+									"value": "{{organization}}",
+									"description": "Name of the customer organization"
+								},
+								{
+									"key": "project",
+									"value": "{{project}}",
+									"description": "Name of the project that contains the stream"
+								},
+								{
+									"key": "stream-id",
+									"value": "{{stream-id}}",
+									"description": "The ID of the stream to fetch timeseries data for"
+								}
+							]
+						},
+						"description": "Returns timeseries data for a stream"
+					},
+					"response": []
+				}
+			],
+			"id": "84e98aa7-4a6a-4546-a218-8ae11e1faeda"
+		},
+		{
+			"name": "QueryTimeseries",
+			"item": [
+				{
+					"name": "Query Timeseries",
+					"id": "9a8d9703-d1ef-4ca4-9168-48ad825ab728",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n     \"data\": {\n          \"attributes\": {\n               \"input-language\": \"uql\",\n               \"query\": \"metric request.size.bytes | delta | group_by [], sum | point percentile(value, 100.0), percentile(value, 99)\",\n               \"oldest-time\": \"2022-12-21T11:00:00+00:00\",\n               \"youngest-time\": \"2022-12-21T11:05:00+00:00\",\n               \"output-period\": 60\n          }\n     }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.lightstep.com/public/v0.2/:organization/projects/:project/telemetry/query_timeseries",
+							"protocol": "https",
+							"host": [
+								"api",
+								"lightstep",
+								"com"
+							],
+							"path": [
+								"public",
+								"v0.2",
+								":organization",
+								"projects",
+								":project",
+								"telemetry",
+								"query_timeseries"
+							],
+							"variable": [
+								{
+									"key": "organization",
+									"value": "{{organization}}"
+								},
+								{
+									"key": "project",
+									"value": "{{project}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "0dd9a35f-acaa-4ac5-8e31-b242cc523bfa",
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{ligtstep_api_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3be57ba9-e6b2-43c3-9f1e-7f52f32b5ee4",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "68215238-d24b-48b6-9732-bef497019553",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
